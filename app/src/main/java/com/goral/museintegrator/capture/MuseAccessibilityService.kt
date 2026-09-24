@@ -85,7 +85,9 @@ class MuseAccessibilityService : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
         val pkg = event.packageName?.toString() ?: return
-        if (pkg != lastSeenPackage) lastSeenPackage = pkg
+        // Skip our own package. Opening this app's Settings to read the diagnostic generates
+        // its own accessibility events, which would overwrite the reading you came to take.
+        if (pkg != packageName && pkg != lastSeenPackage) lastSeenPackage = pkg
         if (busy) return
         if (!MuseApp.prefs(this).autoCaptureEnabled) return
         if (pkg != MuseApp.prefs(this).musePackage) return
