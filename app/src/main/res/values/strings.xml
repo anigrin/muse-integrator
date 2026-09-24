@@ -1,0 +1,27 @@
+<resources>
+    <string name="appName">Muse Integrator</string>
+    <string name="accessibilityLabel">Muse Integrator capture</string>
+    <string name="tileLabel">Capture Muse</string>
+    <string name="accessibilityDescription">Watches for the Muse session results screen, expands the Mind graph, captures it losslessly and computes an Integrated Calm Score. Nothing leaves your device.</string>
+    <string name="noSessionsYet">No sessions yet.\n\nEnable the accessibility service in Settings, then finish a Muse session. The results screen is captured and scored automatically.</string>
+    <string name="serviceDisabledWarning">Capture is off — the accessibility service is not enabled. Open Settings to turn it on.</string>
+    <string name="trendTitle">Integrated Calm Score</string>
+    <string name="trendSubtitle">Lower is calmer. Shaded band is the interquartile range within each session.</string>
+    <string name="settingsTitle">Settings</string>
+    <string name="importTitle">Import screenshots</string>
+    <string name="openAccessibilitySettings">Open accessibility settings</string>
+    <string name="autoCaptureLabel">Capture automatically after a session</string>
+    <string name="powerbandsLabel">Also capture Brainwave Powerbands (unparsed, kept for future algorithms)</string>
+    <string name="archiveHeading">External archive</string>
+    <string name="chooseArchiveFolder">Choose archive folder</string>
+    <string name="archiveAll">Re-archive every session</string>
+    <string name="algorithmHeading">Scoring algorithm</string>
+    <string name="reprocessAll">Reprocess all history with current algorithm</string>
+    <string name="musePackageHeading">Muse app package</string>
+    <string name="savePackage">Save package name</string>
+    <string name="exportZip">Export this session as a ZIP</string>
+    <string name="importExplanation">Runs the same graph analyzer over screenshots you took before this app existed. The trace is recovered from pixels; the session date is read from the file\'s timestamp, and band times are unknown, so the score is normalised by the plotted width instead of Muse\'s classified time. Imported sessions are marked so you can tell them apart.</string>
+    <string name="pickScreenshots">Pick screenshots</string>
+    <string name="menuSettings">Settings</string>
+    <string name="menuImport">Import</string>
+</resources>

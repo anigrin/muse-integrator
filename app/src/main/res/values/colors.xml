@@ -1,0 +1,18 @@
+<resources>
+    <!-- Validated with the dataviz palette checker against surface #fcfcfb:
+         ordinal band ramp passes monotone lightness, step gaps, single hue and the
+         2:1 light-end floor; the series line passes the lightness band, chroma floor
+         and 3:1 contrast. Do not hand-tweak these without re-running the validator. -->
+    <color name="chartSurface">#FCFCFB</color>
+    <color name="chartSeries">#3F3AB5</color>
+    <color name="chartGrid">#E2E1DE</color>
+    <color name="textPrimary">#0B0B0B</color>
+    <color name="textSecondary">#52514E</color>
+    <color name="bandActive">#B0AED8</color>
+    <color name="bandNeutral">#8B88C6</color>
+    <color name="bandCalm">#5F5CAD</color>
+
+    <color name="colorPrimary">#3F3AB5</color>
+    <color name="colorSecondary">#5F5CAD</color>
+    <color name="icLauncherBackground">#2A2033</color>
+</resources>
