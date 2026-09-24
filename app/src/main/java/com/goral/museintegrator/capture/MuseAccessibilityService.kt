@@ -149,7 +149,10 @@ class MuseAccessibilityService : AccessibilityService() {
         // fully into view and come back rather than scoring a partial graph.
         if (roi.top < 0 || roi.bottom > resources.displayMetrics.heightPixels) {
             val mindNode = findNodeByText(root, "Mind")
-            if (mindNode != null && mindNode.performAction(AccessibilityNodeInfo.ACTION_SHOW_ON_SCREEN)) {
+            // ACTION_SHOW_ON_SCREEN has no legacy int constant the way ACTION_CLICK does; it
+            // exists only as an AccessibilityAction (API 23+), so pass its id.
+            val showOnScreen = AccessibilityNodeInfo.AccessibilityAction.ACTION_SHOW_ON_SCREEN.id
+            if (mindNode != null && mindNode.performAction(showOnScreen)) {
                 scheduleEvaluate(EXPAND_WAIT_MS)
                 return
             }
