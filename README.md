@@ -27,6 +27,19 @@ Output lands at `app/build/outputs/apk/debug/app-debug.apk`.
 
 ---
 
+## Signing
+
+CI signs with a fixed key restored from the `SIGNING_KEYSTORE_BASE64` repository secret
+(Settings → Secrets and variables → Actions). Without that secret each runner generates a
+throwaway debug keystore, build N+1 refuses to install over build N, and the only way past the
+signature mismatch is an uninstall — which deletes the database and every preserved
+`source.png`. The build warns in the log when the secret is missing, and prints the signing
+certificate fingerprint on every run so a key change is visible before it becomes a failed
+install.
+
+Changing the key later costs one uninstall and the whole history, so it is worth settling
+before that history is worth keeping.
+
 ## What the app actually does
 
 ### Permissions
