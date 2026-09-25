@@ -17,13 +17,41 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      # Gradle is provided by this action, so the repo needs no gradle-wrapper.jar.
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.11.1'
 
+      # Without a pinned key, each runner generates a throwaway debug keystore and the APK
+      # cannot be installed over the previous one. Warn loudly rather than silently shipping
+      # an APK that forces an uninstall — and an uninstall destroys the session history.
+      - name: Restore signing keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.SIGNING_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            mkdir -p signing
+            printf '%s' "$KEYSTORE_BASE64" | base64 -d > signing/museIntegrator.jks
+            echo "Stable keystore restored ($(stat -c%s signing/museIntegrator.jks) bytes)."
+          else
+            echo "::warning::SIGNING_KEYSTORE_BASE64 is not set. This APK is signed with a throwaway key and will NOT install over an existing copy."
+          fi
+
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
+
+      # Print the signing certificate so a key change is visible in the log rather than
+      # discovered as a failed install.
+      - name: Report signing certificate
+        run: |
+          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          if [ -n "$APKSIGNER" ]; then
+            "$APKSIGNER" verify --print-certs app/build/outputs/apk/debug/app-debug.apk \
+              | grep -iE "certificate DN|SHA-256 digest" || true
+          else
+            echo "apksigner not found; skipping fingerprint report."
+          fi
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
