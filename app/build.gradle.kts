@@ -3,9 +3,32 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+// A stable signing key, restored by CI from a repository secret.
+//
+// Without this, every CI run generates a throwaway debug keystore, so build N+1 cannot be
+// installed over build N — and the only way past a signature mismatch is to uninstall, which
+// deletes the database and every preserved source.png. The key is what makes the history
+// survive an update.
+val stableKeystore = rootProject.file("signing/museIntegrator.jks")
+val hasStableKeystore = stableKeystore.exists()
+
 android {
     namespace = "com.goral.museintegrator"
     compileSdk = 35
+
+    signingConfigs {
+        if (hasStableKeystore) {
+            create("stable") {
+                storeFile = stableKeystore
+                // The keystore itself is the secret; the password only guards the file.
+                storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "museIntegrator"
+                // keytool normalises aliases to lower case, so this must match the stored form.
+                keyAlias = "museintegrator"
+                keyPassword = System.getenv("KEY_PASSWORD")
+                    ?: System.getenv("KEYSTORE_PASSWORD") ?: "museIntegrator"
+            }
+        }
+    }
 
     defaultConfig {
         applicationId = "com.goral.museintegrator"
@@ -19,6 +42,9 @@ android {
     buildTypes {
         debug {
             isMinifyEnabled = false
+            // Falls back to the default debug key when no keystore is present, so a local
+            // build still works — but such an APK will not install over a CI-signed one.
+            if (hasStableKeystore) signingConfig = signingConfigs.getByName("stable")
         }
         release {
             // Left unminified deliberately: the release build is sideloaded, not shipped,
